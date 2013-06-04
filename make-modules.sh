@@ -1,35 +1,22 @@
 #!/usr/bin/env sh
-
-# Fill following informations
-# ==========================================
-
-NDK=
-SDK=
-ANDROID_SOURCE=
-
-# Script variables
-# ==========================================
-
-DIR="$( cd "$( dirname "$0" )" && pwd )"
-REMOTE_INSTALL_PATH=/data/lttng-modules
-NDK_TOOLCHAIN=${NDK}/toolchains/arm-linux-androideabi-4.6/prebuilt/linux-x86_64/bin
+. ./env.sh
+cd src/modules
 
 # Compilation environment
 # ==========================================
 
-export ARCH=arm
-export CROSS_COMPILE=${NDK_TOOLCHAIN}/arm-linux-androideabi-
-
 export KERNELDIR=/home/charles/android-kernel/tegra
-export PATH=$PLATFORM_TOOLS:$PATH
 
 # Build steps 
 # ==========================================
-mkdir ${DIR}/out
+#export INSTALL_MOD_PATH=/tmp/lttng-android
+mkdir -p $INSTALL_MOD_PATH
 
 make CFLAGS_MODULE=-fno-pic
-make INSTALL_MOD_PATH="${DIR}/out" modules_install
+exit 
+make modules_install
 
+exit
 # Module list
 # ==========================================
 
@@ -78,7 +65,7 @@ MODULES=(
   'This-is-not-a-module'
   'This-is-fuck-you-bash'
 )
-sleep 1000
+
 # Make sure directory for modules exists
 # ==========================================
 
