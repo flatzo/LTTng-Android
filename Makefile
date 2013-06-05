@@ -9,7 +9,6 @@ download-dependencies:
 	git submodule update
 
 popt: download-dependencies
-	@echo ${HOST}
 	cd src/popt; \
 	autoreconf -i; \
 	./configure ${CONFIGURE_OPTIONS}; \
@@ -37,6 +36,24 @@ tools: popt uuid urcu
 	./configure ${CONFIGURE_OPTIONS} --disable-lttng-ust --program-prefix=''; \
 	make; \
 	make install;
+
+modules: 
+	cd src/modules; \
+	make CFLAGS_MODULE=-fno-pic; \
+	make modules_install INSTALL_MOD_PATH=${INSTALL_PATH};
+
+android-kernel:
+	cd ${KERNELDIR}; \
+	make ${KERNEL_CONFIG}; \
+	make 
+
+get-kernel-commit:
+	cd /tmp; \
+	git clone https://android.googlesource.com/device/${VENDOR}/${DEVICE}; \
+	cd ${DEVICE}; \
+	git log --max-count=1 kernel;
+
+
 
 package:
 	cd ${INSTALL_PATH}; \

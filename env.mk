@@ -1,5 +1,7 @@
 include fill_out.mk
 
+export KERNELDIR
+
 NDK_TOOLCHAIN		:= ${NDK}/toolchains/arm-linux-androideabi-4.6/prebuilt/${BUILD_PLATFORM}/bin
 PLATFORM_TOOLS		:= ${SDK}/platform-tools
 PATH			:= ${PLATFORM_TOOLS}:${PATH}
@@ -7,16 +9,17 @@ PATH			:= ${PLATFORM_TOOLS}:${PATH}
 # Toolchain environment
 # ==========================================
 
+ARCH			:= arm
 HOST			:= arm-linux-androideabi
-CROSS_COMPILE		:= arm-linux-androideabi
+CROSS_COMPILE		:= ${NDK_TOOLCHAIN}/arm-linux-androideabi-
 SYSROOT			:= ${NDK}/platforms/${PLATFORM}/arch-arm
 
-CC			:= ${NDK_TOOLCHAIN}/${CROSS_COMPILE}-gcc
-CXX			:= ${NDK_TOOLCHAIN}/${CROSS_COMPILE}-g++
-LD			:= ${NDK_TOOLCHAIN}/${CROSS_COMPILE}-ld
-AR			:= ${NDK_TOOLCHAIN}/${CROSS_COMPILE}-ar
-RANLIB			:= ${NDK_TOOLCHAIN}/${CROSS_COMPILE}-ranlib
-STRIP			:= ${NDK_TOOLCHAIN}/${CROSS_COMPILE}-strip
+CC			:= ${CROSS_COMPILE}gcc
+CXX			:= ${CROSS_COMPILE}g++
+LD			:= ${CROSS_COMPILE}ld
+AR			:= ${CROSS_COMPILE}ar
+RANLIB			:= ${CROSS_COMPILE}ranlib
+STRIP			:= ${CROSS_COMPILE}strip
 
 ac_cv_func_malloc_0_nonnull	:= yes
 ac_cv_func_realloc_0_nonnull	:= yes
