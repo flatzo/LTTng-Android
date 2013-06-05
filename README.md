@@ -1,4 +1,4 @@
-lttng-android
+LTTng-Android
 =============
 
 This project aims to facilitate the compilation of LTTng for Android platform. 
@@ -14,7 +14,7 @@ In order to compile every LTTng package that have been ported at the moment :
 2. Run the following commands
 
 ```bash
-git clone <this repo>
+git clone git://github.com/flatzo/LTTng-Android.git
 make            
 make package
 make push-package
