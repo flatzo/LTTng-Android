@@ -10,9 +10,9 @@
 	path = src/modules
 	url = git://git.lttng.org/lttng-modules.git
 	branch = stable-2.1
-[submodule "src/e2fsprogs"]
-	path = src/e2fsprogs
-	url = git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
 [submodule "src/popt"]
 	path = src/popt
 	url = git://github.com/flatzo/popt.git
+[submodule "src/e2fsprogs"]
+	path = src/e2fsprogs
+	url = git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
