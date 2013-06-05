@@ -10,7 +10,7 @@ Quick start
 
 In order to compile every LTTng package that have been ported at the moment : 
 
-1. Fill the file named fill_out.mk with your own informations
+1. Fill the file named ```fill_out.mk``` with your own informations
 2. Run the following commands
 
 ```bash
