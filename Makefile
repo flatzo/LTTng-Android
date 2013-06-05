@@ -42,7 +42,7 @@ modules:
 	make CFLAGS_MODULE=-fno-pic; \
 	make modules_install INSTALL_MOD_PATH=${INSTALL_PATH};
 
-android-kernel:
+kernel:
 	cd ${KERNELDIR}; \
 	make ${KERNEL_CONFIG}; \
 	make 
@@ -52,8 +52,6 @@ get-kernel-commit:
 	git clone https://android.googlesource.com/device/${VENDOR}/${DEVICE}; \
 	cd ${DEVICE}; \
 	git log --max-count=1 kernel;
-
-
 
 package:
 	cd ${INSTALL_PATH}; \
