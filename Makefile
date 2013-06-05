@@ -2,7 +2,7 @@ CWD = $(shell pwd)
 
 include env.mk
 
-all: tools 
+all: tools modules
 
 download-dependencies:
 	git submodule init
@@ -33,11 +33,11 @@ urcu: download-dependencies
 tools: popt uuid urcu
 	cd src/lttng-tools; \
 	./bootstrap; \
-	./configure ${CONFIGURE_OPTIONS} --disable-lttng-ust --program-prefix=''; \
+	./configure ${CONFIGURE_OPTIONS} --disable-lttng-ust --program-prefix='' --with-lttng-rundir=/data/lttng/var/run ; \
 	make; \
 	make install;
 
-modules: 
+modules: kernel
 	cd src/modules; \
 	make CFLAGS_MODULE=-fno-pic; \
 	make modules_install INSTALL_MOD_PATH=${INSTALL_PATH};
@@ -59,5 +59,6 @@ package:
 
 push-package:
 	adb push /tmp/lttng-android.tar ${PACKAGE_PUSH_PATH} 
-	adb shell "su -c tar -xf ${PACKAGE_PUSH_PATH} -C ${REMOTE_INSTALL_PATH}"
+	adb shell "su -c mkdir -p ${TARGET_INSTALL_PATH}"
+	adb shell "su -c tar -xf ${PACKAGE_PUSH_PATH} -C ${TARGET_INSTALL_PATH}"
 

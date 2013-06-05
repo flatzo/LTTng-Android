@@ -25,6 +25,9 @@ INSTALL_PATH		:= /tmp/lttng-android
 #           as the one containing .../var/run
 TARGET_INSTALL_PATH	:= /data/lttng-install
 
+# This path needs to be writable for the adb push
+PACKAGE_PUSH_PATH	:= /sdcard/lttng-android.tar
+
 # Build platform 
 # Select the one that fits best
 BUILD_PLATFORM		:= linux-x86_64
