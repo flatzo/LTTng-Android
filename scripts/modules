@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+#MODULES_DIR=$(pwd)/src/modules
+FILE=${MODULES_DIR}/modules.order
+REGEX="s@kernel/${MODULES_DIR}/\([^ ]*\)@\1@"
+
+case "$1" in
+	load)
+		lines=$(cat $FILE)
+		remote_command=insmod
+		;;
+	unload)
+		lines=$(tac $FILE)
+		remote_command=rmmod
+		;;
+	*)
+		echo "Usage: $0 {load|unload}"
+		exit 1
+esac
+
+
+for line in $lines
+do
+	module=$(echo $line | sed "${REGEX}")
+	echo "${1}ing $module"
+	adb shell su -c "$remote_command ${TARGET_MODULES_DIR}/$module"
+done

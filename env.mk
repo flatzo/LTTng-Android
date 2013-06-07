@@ -1,6 +1,14 @@
+CWD = $(shell pwd)
+
 include fill_out.mk
 
 export KERNELDIR
+
+# Folders locations
+# ==========================================
+export MODULES_DIR		:= ${CWD}/src/modules
+export TOOLS_DIR		:= ${CWD}/src/tools
+
 
 NDK_TOOLCHAIN		:= ${NDK}/toolchains/arm-linux-androideabi-4.6/prebuilt/${BUILD_PLATFORM}/bin
 PLATFORM_TOOLS		:= ${SDK}/platform-tools

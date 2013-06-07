@@ -42,6 +42,12 @@ modules: kernel
 	make CFLAGS_MODULE=-fno-pic; \
 	make modules_install INSTALL_MOD_PATH=${INSTALL_PATH};
 
+load-modules:
+	./scripts/modules load
+
+unload-modules:
+	./scripts/modules unload
+
 kernel:
 	cd ${KERNELDIR}; \
 	make ${KERNEL_CONFIG}; \
