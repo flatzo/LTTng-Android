@@ -4,6 +4,18 @@ include env.mk
 
 all: tools modules
 
+download-ndk:	${NDK}
+${NDK}:
+	mkdir -p "${NDK_BASE}"
+	wget -O - "${NDK_URL}" | bzip2 -d | tar -C ${NDK_BASE} -x
+	@test -d ${NDK} || { echo "Error: directory ${NDK} doesn't exist after download"; exit 1; }
+
+download-sdk:	${SDK}
+${SDK}:
+	mkdir -p "${SDK_BASE}"
+	wget -O - "${SDK_URL}" | gzip -d | tar -C ${SDK_BASE} -x
+	@test -d ${SDK} || { echo "Error: directory ${SDK} doesn't exist after download"; exit 1; }
+
 download-dependencies:
 	git submodule init
 	git submodule update
@@ -68,3 +80,10 @@ push-package:
 	adb shell "su -c mkdir -p ${TARGET_INSTALL_PATH}"
 	adb shell "su -c tar -xf ${PACKAGE_PUSH_PATH} -C ${TARGET_INSTALL_PATH}"
 
+# remove default directories for SDK/NDK
+# FIXME: complete cleanup
+clean:
+	rm -rf ndk/
+	rm -rf sdk/
+
+.PHONY: clean
