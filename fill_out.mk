@@ -1,7 +1,7 @@
 # Path to the root directories
-NDK			:= /opt/android-ndk-r8e
-SDK			:= /opt/android-sdk
-KERNELDIR		:= 
+#NDK			:=
+#SDK			:=
+KERNELDIR		:=
 
 # Select the device to build kernel modules for
 # Supported devices are located in the devices folder.
@@ -28,7 +28,6 @@ TARGET_INSTALL_PATH	:= /data/lttng-install
 # This path needs to be writable for the adb push
 PACKAGE_PUSH_PATH	:= /sdcard/lttng-android.tar
 
-# Build platform 
-# Select the one that fits best
-BUILD_PLATFORM		:= linux-x86_64
+# Override automatic detection of build platform
+#BUILD_PLATFORM		:= linux-x86_64
 #BUILD_PLATFORM		:= linux-x86

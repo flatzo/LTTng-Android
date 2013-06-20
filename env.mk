@@ -1,6 +1,28 @@
 CWD = $(shell pwd)
+HOST_ARCH = $(shell uname -m)
 
 include fill_out.mk
+
+ifeq (${HOST_ARCH}, x86_64)
+BUILD_PLATFORM ?= linux-x86_64
+else ifeq (${HOST_ARCH}, i686)
+BUILD_PLATFORM ?= linux-x86
+else
+$(error Unsupported host arch ${HOST_ARCH})
+endif
+
+# default values for SDK/NDK
+NDK_VERSION ?= android-ndk-r8e
+SDK_VERSION ?= r22.0.1
+
+NDK ?= ${CWD}/ndk/${NDK_VERSION}
+SDK ?= ${CWD}/sdk/android-sdk-linux
+
+NDK_BASE := $(shell dirname ${NDK})
+SDK_BASE := $(shell dirname ${SDK})
+
+NDK_URL ?= http://dl.google.com/android/ndk/${NDK_VERSION}-${BUILD_PLATFORM}.tar.bz2
+SDK_URL ?= http://dl.google.com/android/android-sdk_${SDK_VERSION}-linux.tgz
 
 export KERNELDIR
 
