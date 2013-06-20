@@ -77,8 +77,8 @@ package:
 
 push-package:
 	adb push /tmp/lttng-android.tar ${PACKAGE_PUSH_PATH} 
-	adb shell "su -c mkdir -p ${TARGET_INSTALL_PATH}"
-	adb shell "su -c tar -xf ${PACKAGE_PUSH_PATH} -C ${TARGET_INSTALL_PATH}"
+	adb shell "su -c \"mkdir -p ${TARGET_INSTALL_PATH}\""
+	adb shell "su -c \"tar -x -f ${PACKAGE_PUSH_PATH} -C ${TARGET_INSTALL_PATH}\""
 
 # remove default directories for SDK/NDK
 # FIXME: complete cleanup
