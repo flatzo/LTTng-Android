@@ -1,18 +1,12 @@
-[submodule "src/lttng-tools"]
-	path = src/lttng-tools
-	url = git://git.dorsal.polymtl.ca/~cbriere/lttng-tools
-	branch = portAndroid-latest
-[submodule "src/urcu"]
-	path = src/urcu
-	url = git://git.dorsal.polymtl.ca/~cbriere/userspace-rcu.git
-	branch = crossCompileToArm-rebased-cleaned
-[submodule "src/modules"]
-	path = src/modules
-	url = git://git.lttng.org/lttng-modules.git
-	branch = stable-2.1
-[submodule "src/popt"]
-	path = src/popt
-	url = git://github.com/flatzo/popt.git
-[submodule "src/e2fsprogs"]
-	path = src/e2fsprogs
+[submodule "lttng/tools"]
+	path = lttng/tools
+	url = https://github.com/flatzo/lttng-tools.git
+[submodule "lttng/liburcu"]
+	path = lttng/liburcu
+	url = https://github.com/flatzo/liburcu.git
+[submodule "deps/popt"]
+	path = deps/popt
+	url = https://github.com/flatzo/popt.git
+[submodule "deps/e2fsprogs"]
+	path = deps/e2fsprogs
 	url = git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
