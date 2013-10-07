@@ -17,18 +17,21 @@ ${SDK}:
 	@test -d ${SDK} || { echo "Error: directory ${SDK} doesn't exist after download"; exit 1; }
 
 download-dependencies:
-	git submodule init
-	git submodule update
+	count=`git submodule status | wc -l`; \
+	if [ "$$count" -lt "4" ]; then \
+	git submodule init; \
+	git submodule update; \
+	fi
 
 popt: download-dependencies
-	cd src/popt; \
+	cd deps/popt; \
 	autoreconf -i; \
 	./configure ${CONFIGURE_OPTIONS}; \
 	make; \
 	make install;
 
 uuid: download-dependencies
-	cd src/e2fsprogs; \
+	cd deps/e2fsprogs; \
 	./bootstrap; \
 	./configure ${CONFIGURE_OPTIONS}; \
 	cd lib/uuid; \
@@ -36,21 +39,21 @@ uuid: download-dependencies
 	make install;
 
 urcu: download-dependencies
-	cd src/urcu; \
+	cd lttng/liburcu; \
 	./bootstrap; \
 	./configure ${CONFIGURE_OPTIONS}; \
 	make; \
 	make install;
 
 tools: popt uuid urcu
-	cd src/lttng-tools; \
+	cd lttng/tools; \
 	./bootstrap; \
 	./configure ${CONFIGURE_OPTIONS} --disable-lttng-ust --program-prefix='' --with-lttng-rundir=/data/lttng/var/run ; \
 	make; \
 	make install;
 
 modules: kernel
-	cd src/modules; \
+	cd lttng/modules; \
 	make CFLAGS_MODULE=-fno-pic; \
 	make modules_install INSTALL_MOD_PATH=${INSTALL_PATH};
 
