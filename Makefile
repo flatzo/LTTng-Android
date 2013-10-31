@@ -83,7 +83,12 @@ push-package:
 # remove default directories for SDK/NDK
 # FIXME: complete cleanup
 clean:
+	for D in src/*; do [ -d "$${D}" ] && cd $$D; make clean; done
+
+.PHONY: clean
+
+complete-clean: clean
 	rm -rf ndk/
 	rm -rf sdk/
 
-.PHONY: clean
+.PHONY: complete-clean
