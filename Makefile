@@ -28,7 +28,7 @@ popt: download-dependencies
 	autoreconf -i; \
 	./configure ${CONFIGURE_OPTIONS}; \
 	make; \
-	make install;
+	make DESTDIR=${INSTALL_PATH} install;
 
 uuid: download-dependencies
 	cd deps/e2fsprogs; \
@@ -36,21 +36,21 @@ uuid: download-dependencies
 	./configure ${CONFIGURE_OPTIONS}; \
 	cd lib/uuid; \
 	make; \
-	make install;
+	make DESTDIR=${INSTALL_PATH} install;
 
 urcu: download-dependencies
 	cd lttng/liburcu; \
 	./bootstrap; \
 	./configure ${CONFIGURE_OPTIONS}; \
 	make; \
-	make install;
+	make DESTDIR=${INSTALL_PATH} install;
 
 tools: popt uuid urcu
 	cd lttng/tools; \
 	./bootstrap; \
 	./configure ${CONFIGURE_OPTIONS} --disable-lttng-ust --program-prefix='' --with-lttng-rundir=/data/lttng/var/run ; \
 	make; \
-	make install;
+	make DESTDIR=${INSTALL_PATH} install;
 
 modules: kernel
 	cd lttng/modules; \
@@ -80,13 +80,18 @@ package:
 
 push-package:
 	adb push /tmp/lttng-android.tar ${PACKAGE_PUSH_PATH} 
-	adb shell "su -c \"mkdir -p ${TARGET_INSTALL_PATH}\""
-	adb shell "su -c \"tar -x -f ${PACKAGE_PUSH_PATH} -C ${TARGET_INSTALL_PATH}\""
+	adb shell "su -c \"mkdir ${TARGET_INSTALL_PATH}\""
+	adb shell "su -c \"tar -x -f ${PACKAGE_PUSH_PATH} -C /\""
 
 # remove default directories for SDK/NDK
 # FIXME: complete cleanup
 clean:
+	for D in src/*; do [ -d "$${D}" ] && cd $$D; make clean; done
+
+.PHONY: clean
+
+complete-clean: clean
 	rm -rf ndk/
 	rm -rf sdk/
 
-.PHONY: clean
+.PHONY: complete-clean

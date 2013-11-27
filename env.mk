@@ -59,7 +59,7 @@ export ac_cv_func_realloc_0_nonnull	:= yes
 
 export CPPFLAGS	:= --sysroot=${SYSROOT} -I${SYSROOT}/usr/include -I${SYSROOT}/include -I${INSTALL_PATH}/include -D_FORTIFY_SOURCE=0
 export CXXFLAGS	:= --sysroot=${SYSROOT}
-export CFLAGS		:= --sysroot=${SYSROOT}
-export LDFLAGS		:= --sysroot=${SYSROOT} -L${SYSROOT}/usr/lib -L${SYSROOT}/lib -L${INSTALL_PATH}/lib
+export CFLAGS	:= --sysroot=${SYSROOT}
+export LDFLAGS	:= --sysroot=${SYSROOT} -L${SYSROOT}/usr/lib -L${SYSROOT}/lib -L${INSTALL_PATH}/lib
 
-CONFIGURE_OPTIONS	:= --host=${HOST} --target=${HOST} --prefix=${INSTALL_PATH}
+CONFIGURE_OPTIONS	:= --host=${HOST} --target=${HOST} --prefix=${TARGET_INSTALL_PATH}
