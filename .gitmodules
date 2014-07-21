@@ -1,18 +1,18 @@
-[submodule "src/lttng-tools"]
-	path = src/lttng-tools
-	url = git://git.dorsal.polymtl.ca/~cbriere/lttng-tools
-	branch = portAndroid-latest
-[submodule "src/urcu"]
-	path = src/urcu
-	url = git://git.dorsal.polymtl.ca/~cbriere/userspace-rcu.git
-	branch = crossCompileToArm-rebased-cleaned
-[submodule "src/modules"]
-	path = src/modules
-	url = git://git.lttng.org/lttng-modules.git
-	branch = stable-2.1
-[submodule "src/popt"]
-	path = src/popt
-	url = git://github.com/flatzo/popt.git
 [submodule "src/e2fsprogs"]
 	path = src/e2fsprogs
 	url = git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
+[submodule "userspace-rcu"]
+	path = userspace-rcu
+	url = git://git.urcu.so/userspace-rcu.git
+	branch = stable-0.8
+[submodule "lttng-tools"]
+	path = lttng-tools
+	url = git@github.com:flatzo/lttng-tools.git
+	branch = android
+[submodule "popt"]
+	path = popt
+	url = git://github.com/flatzo/popt.git
+[submodule "libxml2"]
+	path = libxml2
+	url = git://git.gnome.org/libxml2
+	branch = master
