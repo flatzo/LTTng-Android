@@ -2,6 +2,11 @@ CWD = $(shell pwd)
 
 include env.mk
 
+ifdef ANDROID_TREE
+popt:	CPPFLAGS += -DHAVE_STRERROR
+uuid:	CPPFLAGS += -undefHAVE_SYS_UN_H
+endif
+
 all: tools modules
 
 download-ndk:	${NDK}
@@ -20,14 +25,35 @@ download-dependencies:
 	git submodule init
 	git submodule update
 
-popt: download-dependencies
-	cd src/popt; \
+popt:
+	cd popt; \
 	autoreconf -i; \
 	./configure ${CONFIGURE_OPTIONS}; \
 	make; \
 	make install;
 
-uuid: download-dependencies
+ifdef DO_NOT_USE
+libxml: 
+	cp -r ${SYSROOT}/SHARED_LIBRARIES/libxml2/include/libxml ${INSTALL_PATH}/${TARGET_INSTALL_PATH}/include/
+	cd ${ANDROID_BUILD_TOP}/external/icu4c/common && find -name '*.h' | cpio -pdm ${INSTALL_PATH}/${TARGET_INSTALL_PATH}/include
+else
+libxml:
+	cd libxml2; \
+	autoreconf -i; \
+	./configure --without-lzma --enable-shared --enable-static ${CONFIGURE_OPTIONS}; \
+	make libxml2.la; 
+	cd libxml2; \
+	cp .libs/libxml2.a ${INSTALL_PATH}/${TARGET_INSTALL_PATH}/lib/; \
+	cd libxml2/.libs && find -name 'libxml2.so*' | cpio -pdm ${INSTALL_PATH}${TARGET_INSTALL_PATH}/lib/
+
+endif
+
+ifdef ANDROID_TREE
+uuid:
+	cp ${SYSROOT}/SHARED_LIBRARIES/libext2_uuid_intermediates/LINKED/libext2_uuid.so ${INSTALL_PATH}/${TARGET_INSTALL_PATH}/lib/libuuid.so
+
+else
+uuid:
 	cd src/e2fsprogs; \
 	./bootstrap; \
 	./configure ${CONFIGURE_OPTIONS}; \
@@ -35,19 +61,36 @@ uuid: download-dependencies
 	make; \
 	make install;
 
-urcu: download-dependencies
-	cd src/urcu; \
+endif
+
+urcu-mk:
+	cd userspace-rcu ;\
+	./bootstrap; \
+	./configure $(CONFIGURE_OPTIONS); \
+	make Android.mk;
+urcu:
+	cd userspace-rcu ; \
 	./bootstrap; \
 	./configure ${CONFIGURE_OPTIONS}; \
 	make; \
 	make install;
 
-tools: popt uuid urcu
-	cd src/lttng-tools; \
+tools-mk:
+	cd lttng-tools; \
 	./bootstrap; \
 	./configure ${CONFIGURE_OPTIONS} --disable-lttng-ust --program-prefix='' --with-lttng-rundir=/data/lttng/var/run ; \
+	make Android.mk; \
+	
+tools:
+	# export LDFLAGS="${LDFLAGS} -lxml2"; \
+	# echo ${CONFIGURE_OPTIONS}; \
+	# echo ${CPPFLAGS};
+	@echo ${LDFLAGS} 
+	cd lttng-tools; \
+	./bootstrap; \
+	./configure ${CONFIGURE_OPTIONS} --disable-lttng-ust --program-prefix='' --with-lttng-system-rundir=/data/lttng/var/run --with-xml-prefix=${INSTALL_PATH}${TARGET_INSTALL_PATH} ; \
 	make; \
-	make install;
+	make DESTDIR=${INSTALL_PATH} install; 
 
 modules: kernel
 	cd src/modules; \
@@ -63,7 +106,7 @@ unload-modules:
 kernel:
 	cd ${KERNELDIR}; \
 	make ${KERNEL_CONFIG}; \
-	make 
+	make
 
 get-kernel-commit:
 	cd /tmp; \
@@ -76,9 +119,9 @@ package:
 	tar -cf ../lttng-android.tar *
 
 push-package:
-	adb push /tmp/lttng-android.tar ${PACKAGE_PUSH_PATH} 
+	adb push /tmp/lttng-android.tar ${PACKAGE_PUSH_PATH}
 	adb shell "su -c \"mkdir -p ${TARGET_INSTALL_PATH}\""
-	adb shell "su -c \"tar -x -f ${PACKAGE_PUSH_PATH} -C ${TARGET_INSTALL_PATH}\""
+	adb shell "su -c \"tar -x -f ${PACKAGE_PUSH_PATH} -C /\""
 
 # remove default directories for SDK/NDK
 # FIXME: complete cleanup
@@ -92,3 +135,4 @@ complete-clean: clean
 	rm -rf sdk/
 
 .PHONY: complete-clean
+.PHONY: popt

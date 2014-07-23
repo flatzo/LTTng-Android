@@ -1,7 +1,12 @@
 # Path to the root directories
-#NDK			:=
-#SDK			:=
+NDK			:= /opt/android/ndk
+SDK			:= /opt/android/sdk
+ANDROID_BUILD_TOP	:= /home/charles/android/aosp
+ANDROID_TREE		:= $(ANDROID_BUILD_TOP)
+PRODUCT			:= generic
 KERNELDIR		:=
+
+export ANDROID_BUILD_TOP
 
 # Select the device to build kernel modules for
 # Supported devices are located in the devices folder.
@@ -9,10 +14,10 @@ include devices/nexus7.mk
 
 # Targeted Android platform version.
 #
-# In order to list possible platforms : 
+# In order to list possible platforms :
 #   ls ${NDK}/platforms
 #
-# API versions can be found on : 
+# API versions can be found on :
 #   http://developer.android.com/about/dashboards/index.html
 #
 PLATFORM		:= android-14
