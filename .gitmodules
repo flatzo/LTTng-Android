@@ -16,3 +16,10 @@
 	path = libxml2
 	url = git://git.gnome.org/libxml2
 	branch = master
+[submodule "lttng-ust"]
+	path = lttng-ust
+	url = git@github.com:flatzo/lttng-ust.git
+	branch = master
+[submodule "lttng-modules"]
+	path = lttng-modules
+	url = git://git.lttng.org/lttng-modules.git
