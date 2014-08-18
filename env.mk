@@ -35,13 +35,14 @@ export TOOLS_DIR		:= ${CWD}/lttng-tools
 LIBXML2_CPPFLAGS	:= -DLIBXML_SCHEMAS_ENABLED -I${ANDROID_TREE}/external/libxml2/include \
 				-I${ANDROID_TREE}/external/icu4c/common
 ifdef ANDROID_TREE
-# TOOLCHAIN		:= ${ANDROID_TREE}/prebuilt/linux-x86/toolchain/arm-eabi-4.4.3
-TOOLCHAIN		:= ${ANDROID_TREE}/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.7
+# KERNEL_TOOLCHAIN	:= ${ANDROID_TREE}/prebuilt/linux-x86/toolchain/arm-eabi-4.4.3
+# KERNEL_TOOLCHAIN	:= ${ANDROID_TREE}/prebuilts/gcc/linux-x86/arm/arm-eabi-4.7
+TOOLCHAIN		:= ${ANDROID_TREE}/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.6
 # HOST			:= arm-eabi
 HOST			:= arm-linux-androideabi
 SYSROOT			:= ${ANDROID_TREE}/out/target/product/${PRODUCT}/obj
 FLAGS_UUID		:= -I${ANDROID_TREE}/external/e2fsprogs/lib
-LIBXML2_LDFLAGS 	:= -lxml2 # -L${SYS_ROOT}/STATIC_LIBRARIES/libxml2_intermediates
+LIBXML2_LDFLAGS 	:= # -lxml2 # -L${SYS_ROOT}/STATIC_LIBRARIES/libxml2_intermediates
 else
 TOOLCHAIN		:= ${NDK}/toolchains/arm-linux-androideabi-4.6/prebuilt/${BUILD_PLATFORM}
 HOST			:= arm-linux-androideabi
@@ -55,6 +56,7 @@ PATH			:= ${PLATFORM_TOOLS}:${PATH}
 # ==========================================
 
 export ARCH			:= arm
+export SUBARCH			:= arm
 export CROSS_COMPILE		:= ${TOOLCHAIN}/bin/${HOST}-
 
 export HOST SYSROOT
@@ -86,15 +88,16 @@ CPPFLAGS	:= --sysroot=${SYSROOT} \
 			-I${ANDROID_TREE}/bionic/libc/kernel/arch-arm \
 			-I${ANDROID_TREE}/bionic/libc/arch-arm/include \
 			-I${ANDROID_TREE}/bionic/libm/include \
-			-I${ANDROID_TREE}/system/core/utils \
+			-I${ANDROID_TREE}/system/core/include \
 			-I${SYSROOT}/usr/include \
 			-I${SYSROOT}/include \
 			-I${INSTALL_PATH}/${TARGET_INSTALL_PATH}/include \
 			${FLAGS_UUID} ${LIBXML2_CPPFLAGS}
 # -D_FORTIFY_SOURCE=0
 CXXFLAGS	:= --sysroot=${SYSROOT}
-CFLAGS		:= --sysroot=${SYSROOT} -O2 -Wall -fno-short-enums -mandroid
-LDFLAGS		:= --sysroot=${SYSROOT} -L${SYSROOT}/usr/lib -L${SYSROOT}/lib -L${INSTALL_PATH}/${TARGET_INSTALL_PATH}/lib ${LIBXML2_LDFLAGS} # -inst-prefix-dir=${TARGET_INSTALL_PATH}/lib
+CFLAGS		:= --sysroot=${SYSROOT} -O2 -Wall -fno-short-enums -mandroid -w # -fPIC
+LDFLAGS		:= --sysroot=${SYSROOT} -L${SYSROOT}/usr/lib -L${SYSROOT}/lib -L${INSTALL_PATH}/${TARGET_INSTALL_PATH}/lib ${LIBXML2_LDFLAGS} -lm # -inst-prefix-dir=${TARGET_INSTALL_PATH}/lib
+LIBDIR		:= ${INSTALL_PATH}${TARGET_INSTALL_PATH}/lib
 ifdef ANDROID_TREE
 # LDFLAGS		+= -nostdlib -nostartfiles -ffreestanding -Wl,-dynamic-linker,/system/bin/linker -lc -ldl
 #  -nodefaultlibs
@@ -102,6 +105,7 @@ endif
 # ${SYSROOT}/lib/crtbegin_dynamic.o ${SYSROOT}/lib/crtend_android.o
 
 export CPPFLAGS CXXFLAGS CFLAGS LDFLAGS
+export LIBDIR LD_LIBRARY_PATH LD_RUN_PATH
 export DESTDIR=${INSTALL_PATH}
 
 CONFIGURE_OPTIONS	:= --host=${HOST} --target=${HOST} --prefix=${TARGET_INSTALL_PATH}

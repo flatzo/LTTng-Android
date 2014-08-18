@@ -7,6 +7,8 @@ popt:	CPPFLAGS += -DHAVE_STRERROR
 uuid:	CPPFLAGS += -undefHAVE_SYS_UN_H
 endif
 
+tools: LDFLAGS += -lxml2
+
 all: tools modules
 
 download-ndk:	${NDK}
@@ -33,7 +35,7 @@ popt:
 	make install;
 
 ifdef DO_NOT_USE
-libxml: 
+libxml:
 	cp -r ${SYSROOT}/SHARED_LIBRARIES/libxml2/include/libxml ${INSTALL_PATH}/${TARGET_INSTALL_PATH}/include/
 	cd ${ANDROID_BUILD_TOP}/external/icu4c/common && find -name '*.h' | cpio -pdm ${INSTALL_PATH}/${TARGET_INSTALL_PATH}/include
 else
@@ -41,7 +43,7 @@ libxml:
 	cd libxml2; \
 	autoreconf -i; \
 	./configure --without-lzma --enable-shared --enable-static ${CONFIGURE_OPTIONS}; \
-	make libxml2.la; 
+	make libxml2.la;
 	cd libxml2; \
 	cp .libs/libxml2.a ${INSTALL_PATH}/${TARGET_INSTALL_PATH}/lib/; \
 	cd libxml2/.libs && find -name 'libxml2.so*' | cpio -pdm ${INSTALL_PATH}${TARGET_INSTALL_PATH}/lib/
@@ -80,22 +82,38 @@ tools-mk:
 	./bootstrap; \
 	./configure ${CONFIGURE_OPTIONS} --disable-lttng-ust --program-prefix='' --with-lttng-rundir=/data/lttng/var/run ; \
 	make Android.mk; \
-	
+
 tools:
-	# export LDFLAGS="${LDFLAGS} -lxml2"; \
-	# echo ${CONFIGURE_OPTIONS}; \
-	# echo ${CPPFLAGS};
-	@echo ${LDFLAGS} 
 	cd lttng-tools; \
 	./bootstrap; \
-	./configure ${CONFIGURE_OPTIONS} --disable-lttng-ust --program-prefix='' --with-lttng-system-rundir=/data/lttng/var/run --with-xml-prefix=${INSTALL_PATH}${TARGET_INSTALL_PATH} ; \
+	./configure ${CONFIGURE_OPTIONS} --program-prefix='' --with-lttng-system-rundir=/data/lttng/var/run --with-xml-prefix=${INSTALL_PATH}${TARGET_INSTALL_PATH} ;  \
 	make; \
-	make DESTDIR=${INSTALL_PATH} install; 
+	make DESTDIR=${INSTALL_PATH} install;
+	#--disable-lttng-ust ; \
 
-modules: kernel
-	cd src/modules; \
-	make CFLAGS_MODULE=-fno-pic; \
-	make modules_install INSTALL_MOD_PATH=${INSTALL_PATH};
+ust: CPPFLAGS += -fPIC
+ust:
+	cd lttng-ust; \
+	./bootstrap; \
+	./configure ${CONFIGURE_OPTIONS} --disable-static --libdir=${LIBDIR} --program-prefix='' --with-lttng-system-rundir=/data/lttng/var/run ; \
+	make clean; \
+	make; \
+	make DESTDIR=${INSTALL_PATH} install; \
+	rm -rf ${INSTALL_PATH}/${LIBDIR}/pkgconfig; \
+	mv ${INSTALL_PATH}/${LIBDIR}/* ${LIBDIR}/; \
+	rm -rf ${INSTALL_PATH}/tmp
+
+# 	$(CWD)/scripts/update-libdir.sh ${INSTALL_PATH}${TARGET_INSTALL_PATH}/lib .; \
+# 	$(CWD)/scripts/update-libdir.sh ${INSTALL_PATH}${TARGET_INSTALL_PATH}/lib; \
+#
+
+modules: LDFLAGS =
+modules: CPPFLAGS =
+modules: CFLAGS =
+modules:
+	cd lttng-modules; \
+	make ; #CFLAGS_MODULE=-fno-pic;
+	#make modules_install INSTALL_MOD_PATH=${INSTALL_PATH};
 
 load-modules:
 	./scripts/modules load
@@ -103,10 +121,16 @@ load-modules:
 unload-modules:
 	./scripts/modules unload
 
+kernel: LDFLAGS =
+kernel: CPPFLAGS =
 kernel:
 	cd ${KERNELDIR}; \
 	make ${KERNEL_CONFIG}; \
 	make
+
+trace:
+	adb push scripts/trace-ust.sh /data/local/tmp/
+	adb shell "su -c \"sh -v /data/local/tmp/trace-ust.sh\""
 
 get-kernel-commit:
 	cd /tmp; \
@@ -122,6 +146,9 @@ push-package:
 	adb push /tmp/lttng-android.tar ${PACKAGE_PUSH_PATH}
 	adb shell "su -c \"mkdir -p ${TARGET_INSTALL_PATH}\""
 	adb shell "su -c \"tar -x -f ${PACKAGE_PUSH_PATH} -C /\""
+
+remount:
+	adb shell "su -c \"mount -o rw,remount /data\""
 
 # remove default directories for SDK/NDK
 # FIXME: complete cleanup

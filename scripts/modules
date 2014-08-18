@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-#MODULES_DIR=$(pwd)/src/modules
+MODULES_DIR=$(pwd)/lttng-modules
 FILE=${MODULES_DIR}/modules.order
 REGEX="s@kernel/${MODULES_DIR}/\([^ ]*\)@\1@"
 
