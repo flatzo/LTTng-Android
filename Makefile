@@ -43,9 +43,8 @@ libxml:
 	cd libxml2; \
 	autoreconf -i; \
 	./configure --without-lzma --enable-shared --enable-static ${CONFIGURE_OPTIONS}; \
-	make libxml2.la;
-	cd libxml2; \
-	cp .libs/libxml2.a ${INSTALL_PATH}/${TARGET_INSTALL_PATH}/lib/; \
+	make libxml2.la; \
+	cp .libs/libxml2.a ${INSTALL_PATH}/${TARGET_INSTALL_PATH}/lib/;
 	cd libxml2/.libs && find -name 'libxml2.so*' | cpio -pdm ${INSTALL_PATH}${TARGET_INSTALL_PATH}/lib/
 
 endif
