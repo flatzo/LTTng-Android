@@ -11,6 +11,12 @@ tools: LDFLAGS += -lxml2
 
 all: tools modules
 
+$(TARGET_ROOT)/lib/liblttng-ust.so : ust
+$(TARGET_ROOT)/lib/libpopt.so : popt
+$(TARGET_ROOT)/lib/libuuid.so : uuid
+$(TARGET_ROOT)/lib/liburcu.so : urcu
+$(TARGET_ROOT)/lib/libxml2.so : libxml
+
 download-ndk:	${NDK}
 ${NDK}:
 	mkdir -p "${NDK_BASE}"
@@ -33,6 +39,7 @@ popt:
 	./configure ${CONFIGURE_OPTIONS}; \
 	make; \
 	make install;
+
 
 ifdef DO_NOT_USE
 libxml:
@@ -72,7 +79,7 @@ urcu-mk:
 urcu:
 	cd userspace-rcu ; \
 	./bootstrap; \
-	./configure ${CONFIGURE_OPTIONS}; \
+	./configure ${CONFIGURE_OPTIONS} --disable-compiler-tls; \
 	make; \
 	make install;
 
@@ -82,7 +89,8 @@ tools-mk:
 	./configure ${CONFIGURE_OPTIONS} --disable-lttng-ust --program-prefix='' --with-lttng-rundir=/data/lttng/var/run ; \
 	make Android.mk; \
 
-tools:
+# tools: popt uuid libxml urcu ust
+tools: rm-libtool-files
 	cd lttng-tools; \
 	./bootstrap; \
 	./configure ${CONFIGURE_OPTIONS} --program-prefix='' --with-lttng-system-rundir=/data/lttng/var/run --with-xml-prefix=${INSTALL_PATH}${TARGET_INSTALL_PATH} ;  \
@@ -90,8 +98,10 @@ tools:
 	make DESTDIR=${INSTALL_PATH} install;
 	#--disable-lttng-ust ; \
 
+lttng-ust: ust
 ust: CPPFLAGS += -fPIC
-ust:
+ust: rm-libtool-files
+ust: ${TARGET_ROOT}/lib/liburcu.so 
 	cd lttng-ust; \
 	./bootstrap; \
 	./configure ${CONFIGURE_OPTIONS} --disable-static --libdir=${LIBDIR} --program-prefix='' --with-lttng-system-rundir=/data/lttng/var/run ; \
@@ -102,6 +112,7 @@ ust:
 	mv ${INSTALL_PATH}/${LIBDIR}/* ${LIBDIR}/; \
 	rm -rf ${INSTALL_PATH}/tmp
 
+#	$(CWD)/scripts/update-libdir.sh ${INSTALL_PATH}${TARGET_INSTALL_PATH}/lib $(CWD)/lttng-ust; \
 # 	$(CWD)/scripts/update-libdir.sh ${INSTALL_PATH}${TARGET_INSTALL_PATH}/lib .; \
 # 	$(CWD)/scripts/update-libdir.sh ${INSTALL_PATH}${TARGET_INSTALL_PATH}/lib; \
 #
@@ -111,8 +122,11 @@ modules: CPPFLAGS =
 modules: CFLAGS =
 modules:
 	cd lttng-modules; \
-	make ; #CFLAGS_MODULE=-fno-pic;
-	#make modules_install INSTALL_MOD_PATH=${INSTALL_PATH};
+	make ; \
+	make modules_install INSTALL_MOD_PATH=${INSTALL_PATH};
+
+rm-libtool-files:
+	find ${INSTALL_PATH} -name "*.la" | xargs rm -f
 
 load-modules:
 	./scripts/modules load
@@ -162,3 +176,9 @@ complete-clean: clean
 
 .PHONY: complete-clean
 .PHONY: popt
+.PHONY: uuid
+.PHONY: libxml
+.PHONY: tools
+.PHONY: modules
+.PHONY: ust
+.PHONY: urcu

@@ -30,6 +30,7 @@ export KERNELDIR
 # ==========================================
 export MODULES_DIR		:= ${CWD}/src/modules
 export TOOLS_DIR		:= ${CWD}/lttng-tools
+export TARGET_ROOT		:= ${INSTALL_PATH}${TARGET_INSTALL_PATH}
 
 
 LIBXML2_CPPFLAGS	:= -DLIBXML_SCHEMAS_ENABLED -I${ANDROID_TREE}/external/libxml2/include \
@@ -82,7 +83,7 @@ export ac_cv_func_realloc_0_nonnull	:= yes
 # Compilation flags
 # ==========================================
 
-CPPFLAGS	:= --sysroot=${SYSROOT} \
+CPPFLAGS	:= --sysroot=${SYSROOT} -gstabs+ -rdynamic \
 			-I${ANDROID_TREE}/bionic/libc/include \
 			-I${ANDROID_TREE}/bionic/libc/kernel/common \
 			-I${ANDROID_TREE}/bionic/libc/kernel/arch-arm \
@@ -95,7 +96,7 @@ CPPFLAGS	:= --sysroot=${SYSROOT} \
 			${FLAGS_UUID} ${LIBXML2_CPPFLAGS}
 # -D_FORTIFY_SOURCE=0
 CXXFLAGS	:= --sysroot=${SYSROOT}
-CFLAGS		:= --sysroot=${SYSROOT} -O2 -Wall -fno-short-enums -mandroid -w # -fPIC
+CFLAGS		:= --sysroot=${SYSROOT} -O0 -Wall -fno-short-enums -mandroid -w # -fPIC
 LDFLAGS		:= --sysroot=${SYSROOT} -L${SYSROOT}/usr/lib -L${SYSROOT}/lib -L${INSTALL_PATH}/${TARGET_INSTALL_PATH}/lib ${LIBXML2_LDFLAGS} -lm # -inst-prefix-dir=${TARGET_INSTALL_PATH}/lib
 LIBDIR		:= ${INSTALL_PATH}${TARGET_INSTALL_PATH}/lib
 ifdef ANDROID_TREE
