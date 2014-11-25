@@ -34,10 +34,10 @@ download-dependencies:
 	git submodule update
 
 popt:
-	cd popt; \
-	autoreconf -i; \
-	./configure ${CONFIGURE_OPTIONS}; \
-	make; \
+	cd popt && \
+	autoreconf -i && \
+	./configure ${CONFIGURE_OPTIONS} && \
+	make && \
 	make install;
 
 
@@ -120,10 +120,15 @@ ust: ${TARGET_ROOT}/lib/liburcu.so
 modules: LDFLAGS =
 modules: CPPFLAGS =
 modules: CFLAGS =
+modules: CROSS_COMPILE = ${KERNEL_CROSS_COMPILE}
 modules:
 	cd lttng-modules; \
-	make ; \
-	make modules_install INSTALL_MOD_PATH=${INSTALL_PATH};
+	make CFLAGS_MODULE=-fno-pic ; \
+	make modules_install INSTALL_MOD_PATH=${INSTALL_PATH}${TARGET_MODULES_DIR};
+
+modules-clean:
+	cd lttng-modules; \
+	make clean
 
 rm-libtool-files:
 	find ${INSTALL_PATH} -name "*.la" | xargs rm -f

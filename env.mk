@@ -28,7 +28,7 @@ export KERNELDIR
 
 # Folders locations
 # ==========================================
-export MODULES_DIR		:= ${CWD}/src/modules
+export MODULES_DIR		:= ${CWD}/lttng-modules
 export TOOLS_DIR		:= ${CWD}/lttng-tools
 export TARGET_ROOT		:= ${INSTALL_PATH}${TARGET_INSTALL_PATH}
 
@@ -37,10 +37,12 @@ LIBXML2_CPPFLAGS	:= -DLIBXML_SCHEMAS_ENABLED -I${ANDROID_TREE}/external/libxml2/
 				-I${ANDROID_TREE}/external/icu4c/common
 ifdef ANDROID_TREE
 # KERNEL_TOOLCHAIN	:= ${ANDROID_TREE}/prebuilt/linux-x86/toolchain/arm-eabi-4.4.3
-# KERNEL_TOOLCHAIN	:= ${ANDROID_TREE}/prebuilts/gcc/linux-x86/arm/arm-eabi-4.7
-TOOLCHAIN		:= ${ANDROID_TREE}/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.6
-# HOST			:= arm-eabi
-HOST			:= arm-linux-androideabi
+KERNEL_TOOLCHAIN	?= ${ANDROID_TREE}/prebuilts/gcc/linux-x86/arm/arm-eabi-4.7
+TOOLCHAIN		?= ${ANDROID_TREE}/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.6
+#TOOLCHAIN		:= ${ANDROID_TREE}/prebuilts/gcc/linux-x86/arm/arm-eabi-4.7
+#TOOLCHAIN		:= /opt/toolchains/arm-eabi-4.7
+HOST			?= arm-linux-androideabi
+KERNEL_HOST		?= arm-eabi
 SYSROOT			:= ${ANDROID_TREE}/out/target/product/${PRODUCT}/obj
 FLAGS_UUID		:= -I${ANDROID_TREE}/external/e2fsprogs/lib
 LIBXML2_LDFLAGS 	:= # -lxml2 # -L${SYS_ROOT}/STATIC_LIBRARIES/libxml2_intermediates
@@ -56,9 +58,10 @@ PATH			:= ${PLATFORM_TOOLS}:${PATH}
 # Toolchain environment
 # ==========================================
 
-export ARCH			:= arm
-export SUBARCH			:= arm
-export CROSS_COMPILE		:= ${TOOLCHAIN}/bin/${HOST}-
+export ARCH			?= arm
+export SUBARCH			?= arm
+export CROSS_COMPILE		?= ${TOOLCHAIN}/bin/${HOST}-
+export KERNEL_CROSS_COMPILE	?= ${KERNEL_TOOLCHAIN}/bin/${KERNEL_HOST}-
 
 export HOST SYSROOT
 

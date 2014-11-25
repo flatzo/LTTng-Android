@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-MODULES_DIR=$(pwd)/lttng-modules
+MODULES_DIR=${MODULES_DIR:-$(pwd)/lttng-modules}
 FILE=${MODULES_DIR}/modules.order
 REGEX="s@kernel/${MODULES_DIR}/\([^ ]*\)@\1@"
 
@@ -23,5 +23,5 @@ for line in $lines
 do
 	module=$(echo $line | sed "${REGEX}")
 	echo "${1}ing $module"
-	adb shell su -c "$remote_command ${TARGET_MODULES_DIR}/$module"
+	adb shell su -c "$remote_command ${TARGET_MODULES_DIR}/lib/modules/selected/extra/$module"
 done

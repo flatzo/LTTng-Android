@@ -4,13 +4,16 @@ SDK			:= /opt/android/sdk
 ANDROID_BUILD_TOP	:= /home/charles/android/aosp
 ANDROID_TREE		:= $(ANDROID_BUILD_TOP)
 PRODUCT			:= generic
-KERNELDIR		:= /home/charles/Downloads/sm-n900/kernel
+KERNELDIR		:= /home/charles/android/kernels/odroid
+#KERNELDIR		:= /home/charles/android/kernels/sm-g906s
+#KERNELDIR		:= /home/charles/android/kernels/sm-n900
+#KERNELDIR		:= /home/charles/android/kernels/nv-tegra
 
 export ANDROID_BUILD_TOP
 
 # Select the device to build kernel modules for
 # Supported devices are located in the devices folder.
-include devices/note3.mk
+# include devices/note3.mk
 
 # Targeted Android platform version.
 #
@@ -29,12 +32,12 @@ INSTALL_PATH		:= /tmp/lttng-android
 # WARNING : Should not be the same path
 #           as the one containing .../var/run
 TARGET_INSTALL_PATH	:= /data/lttng-install
-TARGET_MODULES_DIR	:= /sdcard/extra
+TARGET_MODULES_DIR	:= /data/local/tmp
 
 export TARGET_MODULES_DIR
 
 # This path needs to be writable for the adb push
-PACKAGE_PUSH_PATH	:= /sdcard/lttng-android.tar
+PACKAGE_PUSH_PATH	:= /data/local/tmp/lttng-android.tar
 
 # Override automatic detection of build platform
 #BUILD_PLATFORM		:= linux-x86_64
