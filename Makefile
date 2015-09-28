@@ -86,14 +86,14 @@ urcu:
 tools-mk:
 	cd lttng-tools; \
 	./bootstrap; \
-	./configure ${CONFIGURE_OPTIONS} --disable-lttng-ust --program-prefix='' --with-lttng-rundir=/data/lttng/var/run ; \
+	./configure ${CONFIGURE_OPTIONS} --program-prefix='' --with-lttng-system-rundir=${TARGET_RUNDIR}	; \
 	make Android.mk; \
 
 # tools: popt uuid libxml urcu ust
 tools: rm-libtool-files
 	cd lttng-tools; \
 	./bootstrap; \
-	./configure ${CONFIGURE_OPTIONS} --program-prefix='' --with-lttng-system-rundir=/data/lttng/var/run --with-xml-prefix=${INSTALL_PATH}${TARGET_INSTALL_PATH} ;  \
+	./configure ${CONFIGURE_OPTIONS} --program-prefix='' --with-lttng-system-rundir=${TARGET_RUNDIR} --with-xml-prefix=${INSTALL_PATH}${TARGET_INSTALL_PATH} ;  \
 	make; \
 	make DESTDIR=${INSTALL_PATH} install;
 	#--disable-lttng-ust ; \
@@ -104,7 +104,7 @@ ust: rm-libtool-files
 ust: ${TARGET_ROOT}/lib/liburcu.so 
 	cd lttng-ust; \
 	./bootstrap; \
-	./configure ${CONFIGURE_OPTIONS} --disable-static --libdir=${LIBDIR} --program-prefix='' --with-lttng-system-rundir=/data/lttng/var/run ; \
+	./configure ${CONFIGURE_OPTIONS} --disable-static --program-prefix='' --with-lttng-system-rundir=${TARGET_RUNDIR}; \
 	make clean; \
 	make; \
 	make DESTDIR=${INSTALL_PATH} install; \
@@ -167,6 +167,13 @@ push-package:
 
 remount:
 	adb shell "su -c \"mount -o rw,remount /data\""
+
+scripts:
+	./scripts/generate-scripts.sh
+
+directory-structure:
+	mkdir -p ${INSTALL_PATH}${TARGET_INSTALL_PATH}/bin
+	mkdir -p ${INSTALL_PATH}${TARGET_RUNDIR}
 
 # remove default directories for SDK/NDK
 # FIXME: complete cleanup

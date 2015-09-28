@@ -31,8 +31,9 @@ INSTALL_PATH		:= /tmp/lttng-android
 # Where lttng will be installed on the device
 # WARNING : Should not be the same path
 #           as the one containing .../var/run
-TARGET_INSTALL_PATH	:= /data/lttng-install
-TARGET_MODULES_DIR	:= /data/local/tmp
+TARGET_INSTALL_PATH	:= /vendor
+TARGET_RUNDIR 		:= /data/var/run
+TARGET_MODULES_DIR	:= ${TARGET_INSTALL_PATH}
 
 export TARGET_MODULES_DIR
 
