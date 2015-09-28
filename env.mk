@@ -99,7 +99,7 @@ CPPFLAGS	:= --sysroot=${SYSROOT} -gstabs+ -rdynamic \
 			${FLAGS_UUID} ${LIBXML2_CPPFLAGS}
 # -D_FORTIFY_SOURCE=0
 CXXFLAGS	:= --sysroot=${SYSROOT}
-CFLAGS		:= --sysroot=${SYSROOT} -O0 -Wall -fno-short-enums -mandroid -w # -fPIC
+CFLAGS		:= --sysroot=${SYSROOT} -O3 -Wall -fno-short-enums -mandroid -pie -fPIE -fPIC # -ggdb3 
 LDFLAGS		:= --sysroot=${SYSROOT} -L${SYSROOT}/usr/lib -L${SYSROOT}/lib -L${INSTALL_PATH}/${TARGET_INSTALL_PATH}/lib ${LIBXML2_LDFLAGS} -lm # -inst-prefix-dir=${TARGET_INSTALL_PATH}/lib
 LIBDIR		:= ${INSTALL_PATH}${TARGET_INSTALL_PATH}/lib
 ifdef ANDROID_TREE
