@@ -14,7 +14,7 @@ In order to compile every LTTng package that have been ported at the moment :
 1. Download android source, refer to [AOSP](https://source.android.com/source/initializing.html)
 2. Fill the file named ``fill_out.mk`` with required informations. You can leave out kernel and ndk related stuff.
 3. Build dependencies in Android tree using by changing the current working directory the following projects and using ``mm`` to build the Android module
- * libext2/uuid
+ * external/e2fsprogs/lib/uuid
 4. Run the following commands
 
 ```bash
@@ -26,6 +26,8 @@ make tools
 make package
 make push-package
 ```
+
+In order to use ``make push-package`` you should have [busybox](https://play.google.com/store/apps/details?id=stericson.busybox&hl=en) installed on your device
 
 
 Building from AOSP tree
