@@ -10,18 +10,6 @@ Quick start
 
 In order to compile every LTTng package that have been ported at the moment : 
 
-### NDK [may not work]
-1. Download Android [SDK](http://developer.android.com/sdk/index.html) ``make download-sdk`` and [NDK](http://developer.android.com/tools/sdk/ndk/index.html) ``make download-ndk``. If you already have those, skip this step and fill SDK and NDK variables in ``fille_out.mk``. 
-2. Fill the file named ``fill_out.mk`` with your own informations
-3. Run the following commands
-
-```bash
-git clone git://github.com/flatzo/LTTng-Android.git
-make            
-make package
-make push-package
-```
- 
 ### AOSP [prefered]
 1. Download android source, refer to [AOSP](https://source.android.com/source/initializing.html)
 2. Fill the file named ``fill_out.mk`` with required informations. You can leave out kernel and ndk related stuff.
@@ -31,7 +19,10 @@ make push-package
 
 ```bash
 git clone git://github.com/flatzo/LTTng-Android.git
-make            
+make download-dependencies # Download the source code requried to build dependencies
+make popt uuid libxml urcu
+make ust # Might have to run twice
+make tools
 make package
 make push-package
 ```
