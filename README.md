@@ -13,7 +13,7 @@ In order to compile every LTTng package that have been ported at the moment :
 ### AOSP
 1. Download android source, refer to [AOSP](https://source.android.com/source/initializing.html)
 2. Fill the file named ``fill_out.mk`` with required informations. You can leave out kernel and ndk related stuff.
-3. Build dependencies in Android tree using ``mm``
+3. Build dependencies in Android tree using by changing the current working directory the following projects and using ``mm`` to build the Android module
  * libext2/uuid
 4. Run the following commands
 
