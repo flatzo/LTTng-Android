@@ -10,7 +10,7 @@ Quick start
 
 In order to compile every LTTng package that have been ported at the moment : 
 
-### AOSP [prefered]
+### AOSP
 1. Download android source, refer to [AOSP](https://source.android.com/source/initializing.html)
 2. Fill the file named ``fill_out.mk`` with required informations. You can leave out kernel and ndk related stuff.
 3. Build dependencies in Android tree using ``mm``
